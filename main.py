@@ -14,7 +14,7 @@ app = FastAPI(
 class TextoEntrada(BaseModel):
     texto: str | None = Field(
         default=None,
-        description="Texto que será analisado pela API."
+        description="Texto que será analisado pela APIs."
     )
 
 with open("regras.json", "r", encoding="utf-8") as arquivo:
