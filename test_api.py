@@ -161,3 +161,80 @@ def test_api_texto_realista():
 
     assert "Dados Funcionais" in nomes
     assert "Matriz de Apuração de Tempo" in nomes
+
+def test_api_rejeita_texto_nulo():
+    resposta = client.post(
+        "/analisar",
+        json={"texto": None}
+    )
+
+    assert resposta.status_code == 200
+
+    dados = resposta.json()
+
+    assert dados["resultado"] is False
+    assert dados["motivo"] == "O campo 'texto' é obrigatório."
+    assert dados["quantidade_itens"] == 0
+    assert dados["itens_encontrados"] == []
+
+
+def test_api_rejeita_texto_vazio():
+    resposta = client.post(
+        "/analisar",
+        json={"texto": ""}
+    )
+
+    assert resposta.status_code == 200
+
+    dados = resposta.json()
+
+    assert dados["resultado"] is False
+    assert dados["motivo"] == "O texto informado está vazio."
+    assert dados["quantidade_itens"] == 0
+    assert dados["itens_encontrados"] == []
+
+
+def test_api_rejeita_texto_apenas_com_espacos():
+    resposta = client.post(
+        "/analisar",
+        json={"texto": "     "}
+    )
+
+    assert resposta.status_code == 200
+
+    dados = resposta.json()
+
+    assert dados["resultado"] is False
+    assert dados["motivo"] == "O texto informado está vazio."
+    assert dados["quantidade_itens"] == 0
+    assert dados["itens_encontrados"] == []
+
+def test_api_rejeita_campo_texto_ausente():
+    resposta = client.post(
+        "/analisar",
+        json={}
+    )
+
+    assert resposta.status_code == 200
+
+    dados = resposta.json()
+
+    assert dados["resultado"] is False
+    assert dados["motivo"] == "O campo 'texto' é obrigatório."
+    assert dados["quantidade_itens"] == 0
+    assert dados["itens_encontrados"] == []
+
+def test_api_rejeita_texto_numerico():
+
+    resposta = client.post(
+        "/analisar",
+        json={"texto": 123}
+    )
+
+    assert resposta.status_code == 422
+
+    dados = resposta.json()
+
+    assert dados["detail"][0]["type"] == "string_type"
+    assert dados["detail"][0]["loc"] == ["body", "texto"]
+
