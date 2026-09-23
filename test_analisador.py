@@ -3,10 +3,19 @@ import json
 from fastapi.testclient import TestClient
 from main import app
 
-from analisador import validar_regras, analisar_texto
+from analisador import analisar_texto
+from gerenciador_regras import validar_regras, preparar_regras
 
 
 client = TestClient(app)
+
+
+def analisar_com_regras(texto, regras):
+
+    regras_preparadas = preparar_regras(regras)
+
+    return analisar_texto(texto, regras_preparadas)
+
 
 def test_regras_validas():
 
@@ -16,6 +25,7 @@ def test_regras_validas():
     resultado = validar_regras(regras)
 
     assert resultado is True
+
 
 def test_regra_sem_item():
 
@@ -31,6 +41,7 @@ def test_regra_sem_item():
 
     assert resultado is False
 
+
 def test_regra_sem_fragmentos():
 
     regras_invalidas = [
@@ -42,6 +53,7 @@ def test_regra_sem_fragmentos():
     resultado = validar_regras(regras_invalidas)
 
     assert resultado is False
+
 
 def test_fragmentos_vazios():
 
@@ -55,6 +67,7 @@ def test_fragmentos_vazios():
     resultado = validar_regras(regras_invalidas)
 
     assert resultado is False
+
 
 def test_analisar_texto_com_item():
 
@@ -70,10 +83,11 @@ def test_analisar_texto_com_item():
 
     texto = "O processo contém informações cadastrais do servidor."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Informações Cadastrais"
+
 
 def test_analisar_texto_sem_item():
 
@@ -89,11 +103,13 @@ def test_analisar_texto_sem_item():
 
     texto = "O processo contém documentos administrativos."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 0
 
+
 def test_analisar_texto_encontra_um_dos_fragmentos():
+
     regras = [
         {
             "item": "Requerimento de Aposentadoria",
@@ -106,13 +122,14 @@ def test_analisar_texto_encontra_um_dos_fragmentos():
 
     texto = "Foi apresentado o requerimento para aposentadoria."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Requerimento de Aposentadoria"
 
 
 def test_analisar_matriz_apuracao_tempo():
+
     regras = [
         {
             "item": "Matriz de Apuração de Tempo",
@@ -131,13 +148,14 @@ def test_analisar_matriz_apuracao_tempo():
         "deve ser realizada a apuração."
     )
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Matriz de Apuração de Tempo"
 
 
 def test_analisar_dados_funcionais():
+
     regras = [
         {
             "item": "Dados Funcionais",
@@ -151,12 +169,14 @@ def test_analisar_dados_funcionais():
 
     texto = "O servidor possui informações sobre quinquênios."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Dados Funcionais"
 
+
 def test_dados_funcionais_nao_identificado_pelo_nome_do_item():
+
     regras = [
         {
             "item": "Dados Funcionais",
@@ -170,12 +190,13 @@ def test_dados_funcionais_nao_identificado_pelo_nome_do_item():
 
     texto = "O documento apresenta a seção Dados Funcionais."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert resultado == []
 
 
 def test_dados_funcionais_identificado_por_ferias_premio():
+
     regras = [
         {
             "item": "Dados Funcionais",
@@ -189,13 +210,14 @@ def test_dados_funcionais_identificado_por_ferias_premio():
 
     texto = "O servidor possui 3 períodos de FÉRIAS PRÊMIO."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Dados Funcionais"
 
 
 def test_dados_funcionais_identificado_por_quinquenios():
+
     regras = [
         {
             "item": "Dados Funcionais",
@@ -209,13 +231,14 @@ def test_dados_funcionais_identificado_por_quinquenios():
 
     texto = "O servidor possui direito a QUINQUÊNIOS."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Dados Funcionais"
 
 
 def test_dados_funcionais_identificado_por_dados_financeiros():
+
     regras = [
         {
             "item": "Dados Funcionais",
@@ -229,12 +252,14 @@ def test_dados_funcionais_identificado_por_dados_financeiros():
 
     texto = "Foram conferidos os DADOS FINANCEIROS ATUAIS."
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Dados Funcionais"
 
+
 def test_item_aparece_uma_unica_vez_mesmo_com_multiplas_ocorrencias():
+
     regras = [
         {
             "item": "Requerimento de Aposentadoria",
@@ -251,12 +276,14 @@ def test_item_aparece_uma_unica_vez_mesmo_com_multiplas_ocorrencias():
         "Ao final, o requerimento de aposentadoria foi deferido."
     )
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Requerimento de Aposentadoria"
 
+
 def test_analise_ignora_maiusculas_e_minusculas():
+
     regras = [
         {
             "item": "Requerimento de Aposentadoria",
@@ -268,13 +295,14 @@ def test_analise_ignora_maiusculas_e_minusculas():
 
     texto = "REQUERIMENTO DE APOSENTADORIA"
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Requerimento de Aposentadoria"
 
 
 def test_analise_ignora_acentos():
+
     regras = [
         {
             "item": "Informações Cadastrais",
@@ -286,13 +314,14 @@ def test_analise_ignora_acentos():
 
     texto = "informacoes cadastrais"
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Informações Cadastrais"
 
 
 def test_analise_ignora_maiusculas_e_acentos_ao_mesmo_tempo():
+
     regras = [
         {
             "item": "Informações Cadastrais",
@@ -304,10 +333,11 @@ def test_analise_ignora_maiusculas_e_acentos_ao_mesmo_tempo():
 
     texto = "INFORMACOES CADASTRAIS"
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     assert len(resultado) == 1
     assert resultado[0]["item"] == "Informações Cadastrais"
+
 
 def test_analisar_documento_com_varios_itens():
 
@@ -368,7 +398,7 @@ def test_analisar_documento_com_varios_itens():
     sobre o histórico funcional do servidor.
     """
 
-    resultado = analisar_texto(texto, regras)
+    resultado = analisar_com_regras(texto, regras)
 
     itens = [item["item"] for item in resultado]
 

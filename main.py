@@ -1,10 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
-import json
-from pathlib import Path
-
-from analisador import analisar_texto, validar_regras
-
+from analisador import analisar_texto
+from gerenciador_regras import carregar_regras, preparar_regras
 
 app = FastAPI(
     title="Text Analyzer API",
@@ -19,16 +16,8 @@ class TextoEntrada(BaseModel):
         description="Texto que será analisado pela API."
     )
 
-
-BASE_DIR = Path(__file__).resolve().parent
-CAMINHO_REGRAS = BASE_DIR / "regras.json"
-
-with open(CAMINHO_REGRAS, "r", encoding="utf-8") as arquivo:
-    regras = json.load(arquivo)
-
-
-if not validar_regras(regras):
-    raise ValueError("O arquivo regras.json possui uma estrutura inválida.")
+regras = carregar_regras()
+regras = preparar_regras(regras)
 
 @app.post("/analisar")
 async def endpoint_analisar_texto(dados: TextoEntrada):
