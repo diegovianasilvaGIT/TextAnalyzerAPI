@@ -1,27 +1,35 @@
 [
   {
+    "id": "AP001",
     "item": "Certidão de Tempo Averbado",
+    "ativo": true,
     "fragmentos": [
       "Tempo Averbado",
       "Certidão de Tempo Averbado"
     ]
   },
   {
+    "id": "AP002",
     "item": "Informações Cadastrais",
+    "ativo": true,
     "fragmentos": [
       "dados cadastrais",
       "informações cadastrais"
     ]
   },
   {
+    "id": "AP003",
     "item": "Requerimento de Aposentadoria",
+    "ativo": true,
     "fragmentos": [
       "requerimento de aposentadoria",
       "requerimento para aposentadoria"
     ]
   },
   {
+    "id": "AP004",
     "item": "Matriz de Apuração de Tempo",
+    "ativo": true,
     "fragmentos": [
       "Art. 144 do ADCT, EC 104_2020 cc Art. 40, III",
       "Art. 144 do ADCT, EC 104_2020 CC Art. 6",
@@ -31,7 +39,9 @@
     ]
   },
   {
+    "id": "AP005",
     "item": "Dados Funcionais",
+    "ativo": true,
     "fragmentos": [
       "FÉRIAS PRÊMIO",
       "QUINQUÊNIOS",
