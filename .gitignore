@@ -1,0 +1,22 @@
+@"
+# Ambiente virtual
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+
+# PyCharm
+.idea/
+
+# Arquivos temporários
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+"@ | Set-Content -Encoding UTF8 ".gitignore"
