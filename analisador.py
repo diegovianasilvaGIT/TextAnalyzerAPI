@@ -27,8 +27,7 @@ def analisar_texto(texto: str, regras: list) -> list:
 
             if re.search(padrao, texto_normalizado):
                 itens_encontrados.append({
-                    "item": regra["item"],
-                    "fragmento": fragmento
+                    "item": regra["item"]
                 })
                 break
 
