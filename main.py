@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from analisador import analisar_texto
+from analisador_processo import analisar_documentos
 from gerenciador_regras import carregar_regras, preparar_regras
 
 app = FastAPI(
@@ -9,12 +10,35 @@ app = FastAPI(
     version="1.0.0"
 )
 
-
 class TextoEntrada(BaseModel):
     texto: str | None = Field(
         default=None,
         description="Texto que será analisado pela API."
     )
+
+
+class Assinatura(BaseModel):
+    cpf: str
+    nome: str
+
+
+class Documento(BaseModel):
+    data: str
+    tipo: str
+    numero: str
+    conteudo: str
+    assinaturas: list[Assinatura]
+    content_type: str
+    unidade_geradora: str
+
+
+class Processo(BaseModel):
+    numero: str
+
+
+class ProcessoRequest(BaseModel):
+    processo: Processo
+    documentos: list[Documento]
 
 regras = carregar_regras()
 regras = preparar_regras(regras)
@@ -52,5 +76,33 @@ async def endpoint_analisar_texto(dados: TextoEntrada):
         "resultado": False,
         "motivo": "Nenhum item previsto nas regras foi identificado no texto.",
         "quantidade_itens": 0,
+        "itens_encontrados": []
+    }
+
+@app.post("/validar-processo")
+async def validar_processo(dados: ProcessoRequest):
+
+    itens_encontrados = analisar_documentos(
+        dados.documentos,
+        regras
+    )
+
+    if len(itens_encontrados) > 0:
+        return {
+            "resultado": True,
+            "motivo": "Itens identificados no processo.",
+            "numero_processo": dados.processo.numero,
+            "quantidade_documentos": len(dados.documentos),
+            "itens_encontrados": itens_encontrados
+        }
+
+    return {
+        "resultado": False,
+        "motivo": (
+            "Nenhum item previsto nas regras "
+            "foi identificado no processo."
+        ),
+        "numero_processo": dados.processo.numero,
+        "quantidade_documentos": len(dados.documentos),
         "itens_encontrados": []
     }

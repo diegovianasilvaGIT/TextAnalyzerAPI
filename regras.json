@@ -39,13 +39,14 @@
     ]
   },
   {
-    "id": "AP005",
-    "item": "Dados Funcionais",
-    "ativo": true,
-    "fragmentos": [
-      "FÉRIAS PRÊMIO",
-      "QUINQUÊNIOS",
-      "DADOS FINANCEIROS ATUAIS"
-    ]
-  }
+  "id": "AP005",
+  "item": "Dados Funcionais",
+  "ativo": true,
+  "criterio": "todos",
+  "fragmentos": [
+    "FÉRIAS PRÊMIO",
+    "QUINQUÊNIOS",
+    "DADOS FINANCEIROS ATUAIS"
+  ]
+}
 ]

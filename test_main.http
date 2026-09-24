@@ -11,3 +11,9 @@ Content-Type: application/json
 {
       "texto": "O documento contém informações cadastrais do servidor."
 }
+
+### Teste com processo real
+POST http://127.0.0.1:8000/validar-processo
+Content-Type: application/json
+
+< processo 1.json

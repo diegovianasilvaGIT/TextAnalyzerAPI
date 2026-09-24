@@ -4,6 +4,7 @@ from pathlib import Path
 
 from normalizador import normalizar_texto
 
+
 def validar_regras(regras: list) -> bool:
 
     if not isinstance(regras, list):
@@ -28,29 +29,6 @@ def validar_regras(regras: list) -> bool:
 
     return True
 
-def preparar_regras(regras: list) -> list:
-
-    regras_preparadas = []
-
-    for regra in regras:
-
-        fragmentos_preparados = []
-
-        for fragmento in regra["fragmentos"]:
-
-            fragmento_normalizado = normalizar_texto(fragmento)
-
-            padrao = r"\b" + re.escape(fragmento_normalizado) + r"\b"
-
-            fragmentos_preparados.append(padrao)
-
-        regras_preparadas.append({
-            "item": regra["item"],
-            "padroes": fragmentos_preparados
-        })
-
-    return regras_preparadas
-
 
 def preparar_regras(regras: list) -> list:
 
@@ -69,7 +47,10 @@ def preparar_regras(regras: list) -> list:
             fragmentos_preparados.append(padrao)
 
         regras_preparadas.append({
+            "id": regra.get("id"),
             "item": regra["item"],
+            "fragmentos": regra["fragmentos"],
+            "criterio": regra.get("criterio", "qualquer"),
             "padroes": fragmentos_preparados
         })
 

@@ -136,3 +136,19 @@ def test_preparar_regras_cria_padroes():
 
     assert "padroes" in resultado[0]
     assert len(resultado[0]["padroes"]) == 1
+
+def test_preparar_regras_preserva_id():
+
+    regras = [
+        {
+            "id": "AP003",
+            "item": "Requerimento de Aposentadoria",
+            "fragmentos": [
+                "requerimento de aposentadoria"
+            ]
+        }
+    ]
+
+    resultado = preparar_regras(regras)
+
+    assert resultado[0]["id"] == "AP003"
