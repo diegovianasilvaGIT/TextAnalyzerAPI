@@ -34,34 +34,6 @@ def test_analisar_processo_real():
 
     assert "AP002" in ids_encontrados
     assert "AP003" in ids_encontrados
-    assert "AP005" in ids_encontrados
-
-    ap005 = next(
-        item
-        for item in resultado
-        if item["id"] == "AP005"
-    )
-
-    assert len(ap005["documentos"]) == 1
-
-    documento_ap005 = ap005["documentos"][0]
-
-    assert documento_ap005["numero"] == "111228515"
-
-    assert documento_ap005["fragmentos"] == [
-        {
-            "fragmento_regra": "FÉRIAS PRÊMIO",
-            "trecho_encontrado": "ferias premio"
-        },
-        {
-            "fragmento_regra": "QUINQUÊNIOS",
-            "trecho_encontrado": "quinquenios"
-        },
-        {
-            "fragmento_regra": "DADOS FINANCEIROS ATUAIS",
-            "trecho_encontrado": "dados financeiros atuais"
-        }
-    ]
 
     print("\nResultado da análise:")
 

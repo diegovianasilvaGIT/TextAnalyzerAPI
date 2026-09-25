@@ -1,52 +1,120 @@
 [
   {
     "id": "AP001",
-    "item": "Certidão de Tempo Averbado",
+    "item": "Conferencia Dados Cadastrais",
     "ativo": true,
+    "criterio": "todos",
     "fragmentos": [
-      "Tempo Averbado",
-      "Certidão de Tempo Averbado"
+      "RELATÓRIO PARA CONFERÊNCIA",
+      "DADOS PESSOAIS",
+      "DADOS FUNCIONAIS",
+      "AFASTAMENTO",
+      "ADICIONAL"
     ]
   },
   {
     "id": "AP002",
-    "item": "Informações Cadastrais",
+    "item": "Conferencia Dados Funcionais",
     "ativo": true,
+    "criterio": "todos",
     "fragmentos": [
-      "dados cadastrais",
-      "informações cadastrais"
+      "RELATÓRIO PARA CONFERÊNCIA",
+      "FÉRIAS PRÊMIO",
+      "QUINQUÊNIOS",
+      "BIÊNIOS",
+      "DADOS FINANCEIROS"
     ]
   },
   {
     "id": "AP003",
-    "item": "Requerimento de Aposentadoria",
+    "item": "Declaração de Acúmulo de Cargos/Proventos",
     "ativo": true,
+    "criterio": "todos",
     "fragmentos": [
-      "requerimento de aposentadoria",
-      "requerimento para aposentadoria"
+      "DECLARAÇÃO DE ACÚMULO DE CARGOS",
+      "PROVENTOS"
     ]
   },
   {
     "id": "AP004",
-    "item": "Matriz de Apuração de Tempo",
+    "item": "Documento de identidade",
     "ativo": true,
+    "criterio": "qualquer",
     "fragmentos": [
-      "Art. 144 do ADCT, EC 104_2020 cc Art. 40, III",
-      "Art. 144 do ADCT, EC 104_2020 CC Art. 6",
-      "Art. 146 do ADCT, EC 104 2020",
-      "Art. 147 do ADCT, EC 104_2020",
-      "Art. 149 do ADCT, EC 104"
+      "certidão de nascimento",
+      "carteira de identidade",
+      "carteira de motorista"
     ]
   },
   {
-  "id": "AP005",
-  "item": "Dados Funcionais",
-  "ativo": true,
-  "criterio": "todos",
-  "fragmentos": [
-    "FÉRIAS PRÊMIO",
-    "QUINQUÊNIOS",
-    "DADOS FINANCEIROS ATUAIS"
-  ]
-}
+    "id": "AP005",
+    "item": "Tempo Averbado",
+    "ativo": true,
+    "criterio": "todos",
+    "fragmentos": [
+      "INFORMAÇÕES COMPLEMENTARES À APOSENTADORIA",
+      "TEMPO AVERBADO",
+      "TEMPO DE SERVIÇO"
+    ]
+  },
+  {
+    "id": "AP006",
+    "item": "Matriz de apuração de tempo de acordo à regra de aposentadoria",
+    "ativo": true,
+    "criterio": "qualquer",
+    "fragmentos": [
+      "01 - Tempo Averbado Novo",
+      "02 - Art. 144 do ADCT, EC 104/2020 - Direito adquirido - Estritamente de Policiais",
+      "03 - Art. 144 do ADCT, EC 104/2020 cc/ Art. 6 da EC 41 cc/ § 5º do Art.40º da CF 88 - última remuneração/com paridade - Direito adquirido - Professor",
+      "04 - Art. 144 do ADCT, EC 104/2020 cc/ Art. 40, §1º Inciso III, Alíneas \"A\", § 5º do Art.40º da CF88 - média/sem paridade - Direito adquirido - Professor",
+      "Artigo 144 do ADCT, incluído pela EC nº 104/2020 C/C Artigo 40, III, “a” ou “b”, da CF/1988, com a redação EC nº41/03 – Direito Adquirido",
+      "Artigo 144 do ADCT, incluído pela Emenda à Constituição Estadual nº 104/2020 C/C Artigo 6º EC 41/03 ou com Artigo 3º EC47/05 Direito Adquirido",
+      "07 - Art. 146, § 4º do ADCT, EC 104/2020 - Regra de transição/Pontos - Professor",
+      "Artigo 146 do ADCT, incluído pela Emenda à Constituição Estadual nº 104/2020 Regra de transição/Pontos",
+      "09 - Art. 147, §1 do ADCT, EC 104/2020 - Regra de transição/Pedágio - PROFESSOR",
+      "Artigo 147 do ADCT, incluído pela Emenda à Constituição Estadual nº 104/2020 - Regra de transição",
+      "11 - Art. 148 do ADCT, EC 104/2020 - POLICIAIS/AGENTES",
+      "12 - Art. 148, §2 do ADCT, EC 104/2020 - Pedágio - POLICIAIS/AGENTES",
+      "Art 149 do ADCT incluído pela EC nº 104 - Regras transição – Exposição Agentes Químicos, físicos ou Biológicos",
+      "Artigo nº 150 do ADCT, acrescentado pela EC nº 104, de 2020 – Regra de Transição - Deficientes",
+      "Art.36 da CE/89 com a redação dada pela EC nº 104/2020 Regras Permanentes",
+      "16 - Art. 36, §4-A, inciso II, CE/89 com a redação dada pela EC nº 104/2020 - Regras Permanentes - POLICIAS/AGENTES",
+      "17 - Art. 36, §1º, inciso I e §5º da CE/89 com a redação dada pela EC nº 104/2020 Regras Permanentes - PROFESSOR",
+      "18 - Art. 36 da CE/89 com a redação dada pela EC nº 104/2020 - Regras Permanentes - REGRA GERAL"
+    ]
+  },
+  {
+    "id": "AP007",
+    "item": "Matriz de Contagem de Tempo",
+    "ativo": true,
+    "criterio": "todos",
+    "fragmentos": [
+      "Matriz de Contagem de Tempo",
+      "Tempo de Serviço",
+      "Contribuição"
+    ]
+  },
+  {
+    "id": "AP008",
+    "item": "Dados Cadastrais",
+    "ativo": true,
+    "criterio": "todos",
+    "fragmentos": [
+      "Dados  cadastrais",
+      "Dados funcionais do cargo em que se dará a aposentadoria",
+      "Informações complementares"
+    ]
+  },
+  {
+    "id": "AP009",
+    "item": "Demonstrativo de pagamento do mês de vigência aposentadoria",
+    "ativo": true,
+    "criterio": "qualquer",
+    "fragmentos": [
+      "Certidão de vantagens e descontos",
+      "Contracheque",
+      "Demonstrativo de pagamento",
+      "Informativo de Proventos"
+    ]
+  }
 ]

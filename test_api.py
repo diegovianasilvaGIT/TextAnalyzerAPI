@@ -11,7 +11,7 @@ def test_api_analisar():
     resposta = client.post(
         "/analisar",
         json={
-            "texto": "O processo contém informações cadastrais do servidor."
+            "texto": "O processo contém um contracheque do servidor."
         }
     )
 
@@ -21,7 +21,6 @@ def test_api_analisar():
 
     assert dados["resultado"] is True
     assert dados["quantidade_itens"] == 1
-
 
 def test_api_texto_vazio():
 
@@ -62,8 +61,8 @@ def test_api_com_varios_itens():
         "/analisar",
         json={
             "texto": (
-                "O processo contém informações cadastrais "
-                "e também o requerimento de aposentadoria."
+                "O processo contém uma carteira de identidade "
+                "e também um contracheque do servidor."
             )
         }
     )
@@ -80,7 +79,7 @@ def test_api_sem_acento_e_maiusculas():
     resposta = client.post(
         "/analisar",
         json={
-            "texto": "O processo contém INFORMACOES CADASTRAIS do servidor."
+            "texto": "O processo contém CERTIDAO DE NASCIMENTO do servidor."
         }
     )
 
@@ -90,7 +89,9 @@ def test_api_sem_acento_e_maiusculas():
 
     assert dados["resultado"] is True
     assert dados["quantidade_itens"] == 1
-    assert dados["itens_encontrados"][0]["item"] == "Informações Cadastrais"
+    assert dados["itens_encontrados"][0]["item"] == (
+        "Documento de identidade"
+    )
 
 def test_api_sem_campo_texto_retorna_motivo():
     resposta = client.post(
@@ -134,11 +135,10 @@ def test_api_texto_nulo():
 
 def test_api_texto_realista():
     texto = """
-    Após análise dos dados funcionais do servidor, foram identificados
-    quinquênios e dados financeiros atuais.
+    Após análise do processo, foi emitido o RELATÓRIO PARA CONFERÊNCIA.
 
-    Na matriz de apuração de tempo, foi considerado o
-    Art. 147 do ADCT, EC 104_2020.
+    Foram verificadas as informações de FÉRIAS PRÊMIO,
+    QUINQUÊNIOS, BIÊNIOS e DADOS FINANCEIROS do servidor.
     """
 
     resposta = client.post(
@@ -153,14 +153,12 @@ def test_api_texto_realista():
     dados = resposta.json()
 
     assert dados["resultado"] is True
-    assert dados["quantidade_itens"] == 2
+    assert dados["quantidade_itens"] == 1
 
     itens = dados["itens_encontrados"]
 
-    nomes = [item["item"] for item in itens]
-
-    assert "Dados Funcionais" in nomes
-    assert "Matriz de Apuração de Tempo" in nomes
+    assert itens[0]["id"] == "AP002"
+    assert itens[0]["item"] == "Conferencia Dados Funcionais"
 
 def test_api_rejeita_texto_nulo():
     resposta = client.post(
@@ -247,9 +245,9 @@ def test_validar_processo_realiza_analise():
         "documentos": [
             {
                 "data": "01/01/2025",
-                "tipo": "Requerimento de Aposentadoria Regra de Transição",
+                "tipo": "Demonstrativo de pagamento",
                 "numero": "111229178",
-                "conteudo": "REQUERIMENTO DE APOSENTADORIA",
+                "conteudo": "CONTRACHEQUE DO SERVIDOR",
                 "assinaturas": [],
                 "content_type": "text/plain",
                 "unidade_geradora": "TESTE"
@@ -266,22 +264,22 @@ def test_validar_processo_realiza_analise():
 
     resultado = response.json()
 
-    assert resultado["resultado"] is True
+    assert resultado["resultado"] is False
+    assert "itens_nao_encontrados" in resultado
     assert resultado["numero_processo"] == "1260.01.0068343/2025-37"
     assert resultado["quantidade_documentos"] == 1
 
     assert len(resultado["itens_encontrados"]) == 1
 
-    assert resultado["itens_encontrados"][0]["id"] == "AP003"
+    assert resultado["itens_encontrados"][0]["id"] == "AP009"
 
     assert resultado["itens_encontrados"][0]["item"] == (
-        "Requerimento de Aposentadoria"
+        "Demonstrativo de pagamento do mês de vigência aposentadoria"
     )
 
     assert resultado["itens_encontrados"][0]["documentos"][0]["numero"] == (
         "111229178"
     )
-
 def test_validar_processo_real_com_json_completo():
 
     import json
@@ -301,7 +299,7 @@ def test_validar_processo_real_com_json_completo():
 
     resultado = response.json()
 
-    assert resultado["resultado"] is True
+    assert resultado["resultado"] is False
 
     assert resultado["numero_processo"] == (
         "1260.01.0068343/2025-37"
@@ -313,6 +311,23 @@ def test_validar_processo_real_com_json_completo():
         resultado["itens_encontrados"],
         list
     )
+    ids_nao_encontrados = [
+        item["id"]
+        for item in resultado["itens_nao_encontrados"]
+    ]
+
+    assert ids_nao_encontrados == [
+        "AP005",
+        "AP006",
+        "AP007",
+        "AP008"
+    ]
+
+    assert "itens_nao_encontrados" in resultado
+    assert isinstance(
+        resultado["itens_nao_encontrados"],
+        list
+    )
 
     ids_encontrados = [
         item["id"]
@@ -321,7 +336,74 @@ def test_validar_processo_real_com_json_completo():
 
     assert "AP002" in ids_encontrados
     assert "AP003" in ids_encontrados
-    assert "AP005" in ids_encontrados
+
+    ap002 = next(
+        item
+        for item in resultado["itens_encontrados"]
+        if item["id"] == "AP002"
+    )
+
+    assert "documentos" in ap002
+    assert isinstance(ap002["documentos"], list)
+    assert len(ap002["documentos"]) > 0
+
+    documento_ap002 = ap002["documentos"][0]
+
+    assert "tipo" in documento_ap002
+    assert "numero" in documento_ap002
+    assert "fragmentos" in documento_ap002
+    assert isinstance(
+        documento_ap002["fragmentos"],
+        list
+    )
+
+    assert len(documento_ap002["fragmentos"]) == 5
+
+    fragmentos_ap002 = [
+        fragmento["fragmento_regra"]
+        for fragmento in documento_ap002["fragmentos"]
+    ]
+
+    for fragmento in [
+        "RELATÓRIO PARA CONFERÊNCIA",
+        "FÉRIAS PRÊMIO",
+        "QUINQUÊNIOS",
+        "BIÊNIOS",
+        "DADOS FINANCEIROS"
+    ]:
+        assert fragmento in fragmentos_ap002
+
+    for fragmento in documento_ap002["fragmentos"]:
+        assert "fragmento_regra" in fragmento
+        assert "trecho_encontrado" in fragmento
+        assert fragmento["trecho_encontrado"]
+
+    ap009 = next(
+        item
+        for item in resultado["itens_encontrados"]
+        if item["id"] == "AP009"
+    )
+
+    assert "documentos" in ap009
+    assert isinstance(ap009["documentos"], list)
+    assert len(ap009["documentos"]) > 0
+
+    documento_ap009 = ap009["documentos"][0]
+
+    assert "tipo" in documento_ap009
+    assert "numero" in documento_ap009
+    assert "fragmentos" in documento_ap009
+    assert isinstance(
+        documento_ap009["fragmentos"],
+        list
+    )
+
+    assert len(documento_ap009["fragmentos"]) >= 1
+
+    for fragmento in documento_ap009["fragmentos"]:
+        assert "fragmento_regra" in fragmento
+        assert "trecho_encontrado" in fragmento
+        assert fragmento["trecho_encontrado"]
 
 def test_validar_processo_sem_itens_encontrados():
 
@@ -354,7 +436,7 @@ def test_validar_processo_sem_itens_encontrados():
     assert resultado["resultado"] is False
 
     assert resultado["motivo"] == (
-        "Nenhum item previsto nas regras foi identificado no processo."
+        "Existem itens obrigatórios não encontrados no processo."
     )
 
     assert resultado["quantidade_documentos"] == 1
@@ -380,7 +462,7 @@ def test_validar_processo_real_com_processo_json():
 
     resultado = response.json()
 
-    assert resultado["resultado"] is True
+    assert resultado["resultado"] is False
 
     assert resultado["numero_processo"] == (
         "1450.01.0035106/2023-81"
@@ -413,7 +495,7 @@ def test_api_validar_processo_com_json_real():
 
     resultado = resposta.json()
 
-    assert resultado["resultado"] is True
+    assert resultado["resultado"] is False
     assert resultado["numero_processo"] == "1450.01.0035106/2023-81"
     assert resultado["quantidade_documentos"] == 17
 
@@ -428,3 +510,4 @@ def test_api_validar_processo_com_json_real():
     assert "AP005" in ids_encontrados
     print("\nResposta completa da API:")
     print(json.dumps(resultado, indent=4, ensure_ascii=False))
+

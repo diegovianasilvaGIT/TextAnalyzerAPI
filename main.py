@@ -86,23 +86,38 @@ async def validar_processo(dados: ProcessoRequest):
         dados.documentos,
         regras
     )
+    ids_encontrados = {
+        item["id"]
+        for item in itens_encontrados
+    }
 
-    if len(itens_encontrados) > 0:
+    itens_nao_encontrados = [
+        {
+            "id": regra["id"],
+            "item": regra["item"]
+        }
+        for regra in regras
+        if regra.get("ativo", True)
+        and regra["id"] not in ids_encontrados
+    ]
+
+    if len(itens_nao_encontrados) == 0:
         return {
             "resultado": True,
             "motivo": "Itens identificados no processo.",
             "numero_processo": dados.processo.numero,
             "quantidade_documentos": len(dados.documentos),
-            "itens_encontrados": itens_encontrados
+            "itens_encontrados": itens_encontrados,
+            "itens_nao_encontrados": itens_nao_encontrados
         }
 
     return {
         "resultado": False,
         "motivo": (
-            "Nenhum item previsto nas regras "
-            "foi identificado no processo."
+            "Existem itens obrigatórios não encontrados no processo."
         ),
         "numero_processo": dados.processo.numero,
         "quantidade_documentos": len(dados.documentos),
-        "itens_encontrados": []
+        "itens_encontrados": itens_encontrados,
+        "itens_nao_encontrados": itens_nao_encontrados
     }

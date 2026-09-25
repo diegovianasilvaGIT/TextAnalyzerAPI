@@ -49,6 +49,7 @@ def preparar_regras(regras: list) -> list:
         regras_preparadas.append({
             "id": regra.get("id"),
             "item": regra["item"],
+            "ativo": regra.get("ativo", True),
             "fragmentos": regra["fragmentos"],
             "criterio": regra.get("criterio", "qualquer"),
             "padroes": fragmentos_preparados
