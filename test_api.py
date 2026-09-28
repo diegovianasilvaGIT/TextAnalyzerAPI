@@ -236,6 +236,7 @@ def test_api_rejeita_texto_numerico():
     assert dados["detail"][0]["type"] == "string_type"
     assert dados["detail"][0]["loc"] == ["body", "texto"]
 
+
 def test_validar_processo_realiza_analise():
 
     payload = {
@@ -264,22 +265,22 @@ def test_validar_processo_realiza_analise():
 
     resultado = response.json()
 
-    assert resultado["resultado"] is False
-    assert "itens_nao_encontrados" in resultado
-    assert resultado["numero_processo"] == "1260.01.0068343/2025-37"
-    assert resultado["quantidade_documentos"] == 1
+    assert resultado == {
+        "resultado": False,
+        "itens_nao_encontrados": [
+            "Conferencia Dados Cadastrais",
+            "Conferencia Dados Funcionais",
+            "Declaração de Acúmulo de Cargos/Proventos",
+            "Documento de identidade",
+            "Tempo Averbado",
+            "Matriz de apuração de tempo de acordo à regra de aposentadoria",
+            "Matriz de Contagem de Tempo",
+            "Dados Cadastrais"
+        ]
+    }
 
-    assert len(resultado["itens_encontrados"]) == 1
 
-    assert resultado["itens_encontrados"][0]["id"] == "AP009"
 
-    assert resultado["itens_encontrados"][0]["item"] == (
-        "Demonstrativo de pagamento do mês de vigência aposentadoria"
-    )
-
-    assert resultado["itens_encontrados"][0]["documentos"][0]["numero"] == (
-        "111229178"
-    )
 def test_validar_processo_real_com_json_completo():
 
     import json
@@ -299,111 +300,14 @@ def test_validar_processo_real_com_json_completo():
 
     resultado = response.json()
 
-    assert resultado["resultado"] is False
-
-    assert resultado["numero_processo"] == (
-        "1260.01.0068343/2025-37"
-    )
-
-    assert resultado["quantidade_documentos"] == 16
-
-    assert isinstance(
-        resultado["itens_encontrados"],
-        list
-    )
-    ids_nao_encontrados = [
-        item["id"]
-        for item in resultado["itens_nao_encontrados"]
-    ]
-
-    assert ids_nao_encontrados == [
-        "AP005",
-        "AP006",
-        "AP007",
-        "AP008"
-    ]
-
-    assert "itens_nao_encontrados" in resultado
-    assert isinstance(
-        resultado["itens_nao_encontrados"],
-        list
-    )
-
-    ids_encontrados = [
-        item["id"]
-        for item in resultado["itens_encontrados"]
-    ]
-
-    assert "AP002" in ids_encontrados
-    assert "AP003" in ids_encontrados
-
-    ap002 = next(
-        item
-        for item in resultado["itens_encontrados"]
-        if item["id"] == "AP002"
-    )
-
-    assert "documentos" in ap002
-    assert isinstance(ap002["documentos"], list)
-    assert len(ap002["documentos"]) > 0
-
-    documento_ap002 = ap002["documentos"][0]
-
-    assert "tipo" in documento_ap002
-    assert "numero" in documento_ap002
-    assert "fragmentos" in documento_ap002
-    assert isinstance(
-        documento_ap002["fragmentos"],
-        list
-    )
-
-    assert len(documento_ap002["fragmentos"]) == 5
-
-    fragmentos_ap002 = [
-        fragmento["fragmento_regra"]
-        for fragmento in documento_ap002["fragmentos"]
-    ]
-
-    for fragmento in [
-        "RELATÓRIO PARA CONFERÊNCIA",
-        "FÉRIAS PRÊMIO",
-        "QUINQUÊNIOS",
-        "BIÊNIOS",
-        "DADOS FINANCEIROS"
-    ]:
-        assert fragmento in fragmentos_ap002
-
-    for fragmento in documento_ap002["fragmentos"]:
-        assert "fragmento_regra" in fragmento
-        assert "trecho_encontrado" in fragmento
-        assert fragmento["trecho_encontrado"]
-
-    ap009 = next(
-        item
-        for item in resultado["itens_encontrados"]
-        if item["id"] == "AP009"
-    )
-
-    assert "documentos" in ap009
-    assert isinstance(ap009["documentos"], list)
-    assert len(ap009["documentos"]) > 0
-
-    documento_ap009 = ap009["documentos"][0]
-
-    assert "tipo" in documento_ap009
-    assert "numero" in documento_ap009
-    assert "fragmentos" in documento_ap009
-    assert isinstance(
-        documento_ap009["fragmentos"],
-        list
-    )
-
-    assert len(documento_ap009["fragmentos"]) >= 1
-
-    for fragmento in documento_ap009["fragmentos"]:
-        assert "fragmento_regra" in fragmento
-        assert "trecho_encontrado" in fragmento
-        assert fragmento["trecho_encontrado"]
+    assert resultado == {
+        "resultado": False,
+        "itens_nao_encontrados": [
+            "Tempo Averbado",
+            "Matriz de apuração de tempo de acordo à regra de aposentadoria",
+            "Matriz de Contagem de Tempo"
+        ]
+    }
 
 def test_validar_processo_sem_itens_encontrados():
 
@@ -433,15 +337,21 @@ def test_validar_processo_sem_itens_encontrados():
 
     resultado = response.json()
 
-    assert resultado["resultado"] is False
+    assert resultado == {
+        "resultado": False,
+        "itens_nao_encontrados": [
+            "Conferencia Dados Cadastrais",
+            "Conferencia Dados Funcionais",
+            "Declaração de Acúmulo de Cargos/Proventos",
+            "Documento de identidade",
+            "Tempo Averbado",
+            "Matriz de apuração de tempo de acordo à regra de aposentadoria",
+            "Matriz de Contagem de Tempo",
+            "Dados Cadastrais",
+            "Demonstrativo de pagamento do mês de vigência aposentadoria"
+        ]
+    }
 
-    assert resultado["motivo"] == (
-        "Existem itens obrigatórios não encontrados no processo."
-    )
-
-    assert resultado["quantidade_documentos"] == 1
-
-    assert resultado["itens_encontrados"] == []
 
 def test_validar_processo_real_com_processo_json():
 
@@ -464,20 +374,22 @@ def test_validar_processo_real_com_processo_json():
 
     assert resultado["resultado"] is False
 
-    assert resultado["numero_processo"] == (
-        "1450.01.0035106/2023-81"
-    )
-
-    assert resultado["quantidade_documentos"] == 17
+    assert "itens_nao_encontrados" in resultado
 
     assert isinstance(
-        resultado["itens_encontrados"],
+        resultado["itens_nao_encontrados"],
         list
     )
 
-    assert len(resultado["itens_encontrados"]) > 0
+    assert len(resultado["itens_nao_encontrados"]) > 0
+
+    assert set(resultado.keys()) == {
+        "resultado",
+        "itens_nao_encontrados"
+    }
 
 def test_api_validar_processo_com_json_real():
+
     import json
     from pathlib import Path
 
@@ -496,18 +408,137 @@ def test_api_validar_processo_com_json_real():
     resultado = resposta.json()
 
     assert resultado["resultado"] is False
-    assert resultado["numero_processo"] == "1450.01.0035106/2023-81"
-    assert resultado["quantidade_documentos"] == 17
 
-    ids_encontrados = [
-        item["id"]
-        for item in resultado["itens_encontrados"]
-    ]
+    assert isinstance(
+        resultado["itens_nao_encontrados"],
+        list
+    )
 
-    assert "AP001" in ids_encontrados
-    assert "AP002" in ids_encontrados
-    assert "AP003" in ids_encontrados
-    assert "AP005" in ids_encontrados
-    print("\nResposta completa da API:")
+    assert len(resultado["itens_nao_encontrados"]) > 0
+
+    assert all(
+        isinstance(item, str)
+        for item in resultado["itens_nao_encontrados"]
+    )
+
+    assert set(resultado.keys()) == {
+        "resultado",
+        "itens_nao_encontrados"
+    }
+
+
+
+def test_validar_processo_retorna_itens_nao_encontrados_como_lista():
+
+    payload = {
+        "processo": {
+            "numero": "9999.99.9999999/9999-99"
+        },
+        "documentos": [
+            {
+                "data": "01/01/2025",
+                "tipo": "Documento de Teste",
+                "numero": "999999",
+                "conteudo": "Este documento não possui nenhum fragmento previsto.",
+                "assinaturas": [],
+                "content_type": "text/plain",
+                "unidade_geradora": "TESTE"
+            }
+        ]
+    }
+
+    response = client.post(
+        "/validar-processo",
+        json=payload
+    )
+
+    assert response.status_code == 200
+
+    resultado = response.json()
+
+    assert resultado["resultado"] is False
+
+    assert isinstance(
+        resultado["itens_nao_encontrados"],
+        list
+    )
+
+    assert all(
+        isinstance(item, str)
+        for item in resultado["itens_nao_encontrados"]
+    )
+
+
+
+def test_validar_processo_completo_retorna_lista_vazia():
+    import json
+
+    payload = {
+        "processo": {
+            "numero": "9999.99.9999999/9999-99"
+        },
+        "documentos": [
+            {
+                "data": "01/01/2026",
+                "tipo": "Documentação completa para aposentadoria",
+                "numero": "000001",
+                "conteudo": """
+                    RELATÓRIO PARA CONFERÊNCIA
+                    DADOS PESSOAIS
+                    DADOS FUNCIONAIS
+                    AFASTAMENTO
+                    ADICIONAL
+
+                    FÉRIAS PRÊMIO
+                    QUINQUÊNIOS
+                    BIÊNIOS
+                    DADOS FINANCEIROS
+
+                    DECLARAÇÃO DE ACÚMULO DE CARGOS
+                    PROVENTOS
+
+                    carteira de identidade
+
+                    INFORMAÇÕES COMPLEMENTARES À APOSENTADORIA
+                    TEMPO AVERBADO
+                    TEMPO DE SERVIÇO
+
+                    01 - Tempo Averbado Novo
+
+                    Matriz de Contagem de Tempo
+                    Tempo de Serviço
+                    Contribuição
+
+                    Dados cadastrais
+                    Dados funcionais do cargo em que se dará a aposentadoria
+                    Informações complementares
+
+                    Contracheque
+                """,
+                "assinaturas": [],
+                "content_type": "text/plain",
+                "unidade_geradora": "TESTE"
+            }
+        ]
+    }
+
+    response = client.post(
+        "/validar-processo",
+        json=payload
+    )
+
+    assert response.status_code == 200
+
+    resultado = response.json()
+
+    print("\nRESPOSTA DA API:")
     print(json.dumps(resultado, indent=4, ensure_ascii=False))
+
+
+    assert resultado["resultado"] is True
+
+    assert resultado["itens_nao_encontrados"] == []
+
+
+
 
