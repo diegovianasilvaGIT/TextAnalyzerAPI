@@ -410,3 +410,26 @@ def test_analisar_documento_com_varios_itens():
     assert "Matriz de Apuração de Tempo" in itens
 
     assert "Dados Funcionais" not in itens
+
+def test_analisar_texto_ignora_regra_inativa():
+
+    regras = [
+        {
+            "id": "AP999",
+            "item": "Regra Inativa",
+            "ativo": False,
+            "criterio": "qualquer",
+            "fragmentos": [
+                "DADOS CADASTRAIS"
+            ]
+        }
+    ]
+
+    regras = preparar_regras(regras)
+
+    resultado = analisar_texto(
+        "O documento contém DADOS CADASTRAIS.",
+        regras
+    )
+
+    assert resultado == []

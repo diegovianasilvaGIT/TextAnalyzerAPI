@@ -152,3 +152,179 @@ def test_preparar_regras_preserva_id():
     resultado = preparar_regras(regras)
 
     assert resultado[0]["id"] == "AP003"
+
+def test_preparar_regras_preserva_criterio():
+
+    regras = [
+        {
+            "id": "AP005",
+            "item": "Tempo Averbado",
+            "ativo": True,
+            "criterio": "todos",
+            "fragmentos": [
+                "INFORMAÇÕES COMPLEMENTARES À APOSENTADORIA",
+                "TEMPO AVERBADO",
+                "TEMPO DE SERVIÇO"
+            ]
+        }
+    ]
+
+    resultado = preparar_regras(regras)
+
+    assert resultado[0]["criterio"] == "todos"
+
+def test_preparar_regras_preserva_ativo():
+
+    regras = [
+        {
+            "id": "AP001",
+            "item": "Informações Cadastrais",
+            "ativo": False,
+            "criterio": "qualquer",
+            "fragmentos": [
+                "dados cadastrais"
+            ]
+        }
+    ]
+
+    resultado = preparar_regras(regras)
+
+    assert resultado[0]["ativo"] is False
+
+def test_validar_regras_rejeita_regra_sem_id():
+
+    regras = [
+        {
+            "item": "Informações Cadastrais",
+            "fragmentos": [
+                "dados cadastrais"
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_id_que_nao_e_string():
+
+    regras = [
+        {
+            "id": 123,
+            "item": "Informações Cadastrais",
+            "fragmentos": [
+                "dados cadastrais"
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_ativo_que_nao_e_booleano():
+
+    regras = [
+        {
+            "id": "AP001",
+            "item": "Informações Cadastrais",
+            "ativo": "sim",
+            "fragmentos": [
+                "dados cadastrais"
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_criterio_invalido():
+
+    regras = [
+        {
+            "id": "AP001",
+            "item": "Informações Cadastrais",
+            "criterio": "qualquer-coisa",
+            "fragmentos": [
+                "dados cadastrais"
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_item_que_nao_e_string():
+
+    regras = [
+        {
+            "id": "AP999",
+            "item": 123,
+            "ativo": True,
+            "criterio": "qualquer",
+            "fragmentos": [
+                "TESTE"
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_fragmento_que_nao_e_string():
+
+    regras = [
+        {
+            "id": "AP999",
+            "item": "Regra de teste",
+            "ativo": True,
+            "criterio": "qualquer",
+            "fragmentos": [
+                "TESTE",
+                123
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_fragmento_vazio():
+
+    regras = [
+        {
+            "id": "AP999",
+            "item": "Regra de teste",
+            "ativo": True,
+            "criterio": "qualquer",
+            "fragmentos": [
+                ""
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_id_vazio():
+
+    regras = [
+        {
+            "id": "",
+            "item": "Regra de teste",
+            "ativo": True,
+            "criterio": "qualquer",
+            "fragmentos": [
+                "TESTE"
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False
+
+def test_validar_regras_rejeita_item_vazio():
+
+    regras = [
+        {
+            "id": "AP999",
+            "item": "",
+            "ativo": True,
+            "criterio": "qualquer",
+            "fragmentos": [
+                "TESTE"
+            ]
+        }
+    ]
+
+    assert validar_regras(regras) is False

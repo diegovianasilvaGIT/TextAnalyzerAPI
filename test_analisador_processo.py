@@ -422,3 +422,135 @@ def test_regra_qualquer_usa_estrutura_padronizada_de_fragmentos():
                 ]
             }
 ]
+
+def test_regra_criterio_todos_nao_identifica_fragmentos_em_documentos_diferentes():
+
+    documentos = [
+        Documento(
+            data="01/01/2025",
+            tipo="Documento 1",
+            numero="001",
+            conteudo="FÉRIAS PRÊMIO",
+            assinaturas=[],
+            content_type="text/plain",
+            unidade_geradora="TESTE"
+        ),
+        Documento(
+            data="01/01/2025",
+            tipo="Documento 2",
+            numero="002",
+            conteudo="QUINQUÊNIOS",
+            assinaturas=[],
+            content_type="text/plain",
+            unidade_geradora="TESTE"
+        ),
+        Documento(
+            data="01/01/2025",
+            tipo="Documento 3",
+            numero="003",
+            conteudo="DADOS FINANCEIROS ATUAIS",
+            assinaturas=[],
+            content_type="text/plain",
+            unidade_geradora="TESTE"
+        )
+    ]
+
+    regras = [
+        {
+            "id": "AP005",
+            "item": "Dados Funcionais",
+            "criterio": "todos",
+            "fragmentos": [
+                "FÉRIAS PRÊMIO",
+                "QUINQUÊNIOS",
+                "DADOS FINANCEIROS ATUAIS"
+            ]
+        }
+    ]
+
+    regras = preparar_regras(regras)
+
+    resultado = analisar_documentos(
+        documentos,
+        regras
+    )
+
+    assert resultado == []
+
+def test_regra_ap006_identifica_fragmento_complexo():
+
+    documentos = [
+        Documento(
+            data="01/01/2025",
+            tipo="Matriz de apuração de tempo",
+            numero="001",
+            conteudo=(
+                "04 - Art. 144 do ADCT, EC 104/2020 cc/ Art. 40, "
+                "§1º Inciso III, Alíneas \"A\", § 5º do Art.40º da CF88 "
+                "- média/sem paridade - Direito adquirido - Professor"
+            ),
+            assinaturas=[],
+            content_type="text/plain",
+            unidade_geradora="TESTE"
+        )
+    ]
+
+    regras = [
+        {
+            "id": "AP006",
+            "item": "Matriz de apuração de tempo de acordo à regra de aposentadoria",
+            "criterio": "qualquer",
+            "fragmentos": [
+                "04 - Art. 144 do ADCT, EC 104/2020 cc/ Art. 40, §1º Inciso III, Alíneas \"A\", § 5º do Art.40º da CF88 - média/sem paridade - Direito adquirido - Professor"
+            ]
+        }
+    ]
+
+    regras = preparar_regras(regras)
+
+    resultado = analisar_documentos(
+        documentos,
+        regras
+    )
+
+    assert len(resultado) == 1
+    assert resultado[0]["id"] == "AP006"
+    assert resultado[0]["item"] == (
+        "Matriz de apuração de tempo de acordo à regra de aposentadoria"
+    )
+    assert len(resultado[0]["documentos"]) == 1
+
+def test_analisar_documentos_ignora_regra_inativa():
+
+    documentos = [
+        Documento(
+            data="01/01/2025",
+            tipo="Documento de teste",
+            numero="001",
+            conteudo="DADOS CADASTRAIS",
+            assinaturas=[],
+            content_type="text/plain",
+            unidade_geradora="TESTE"
+        )
+    ]
+
+    regras = [
+        {
+            "id": "AP999",
+            "item": "Regra Inativa",
+            "ativo": False,
+            "criterio": "qualquer",
+            "fragmentos": [
+                "DADOS CADASTRAIS"
+            ]
+        }
+    ]
+
+    regras = preparar_regras(regras)
+
+    resultado = analisar_documentos(
+        documentos,
+        regras
+    )
+
+    assert resultado == []

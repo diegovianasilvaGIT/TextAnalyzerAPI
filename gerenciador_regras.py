@@ -18,6 +18,27 @@ def validar_regras(regras: list) -> bool:
         if "item" not in regra:
             return False
 
+        if not isinstance(regra["item"], str):
+            return False
+
+        if not regra["item"].strip():
+            return False
+
+        if "id" not in regra:
+            return False
+
+        if not isinstance(regra["id"], str):
+            return False
+
+        if not regra["id"].strip():
+            return False
+
+        if "ativo" in regra and not isinstance(regra["ativo"], bool):
+            return False
+
+        if "criterio" in regra and regra["criterio"] not in ["qualquer", "todos"]:
+            return False
+
         if "fragmentos" not in regra:
             return False
 
@@ -26,6 +47,13 @@ def validar_regras(regras: list) -> bool:
 
         if len(regra["fragmentos"]) == 0:
             return False
+
+        for fragmento in regra["fragmentos"]:
+            if not isinstance(fragmento, str):
+                return False
+
+            if not fragmento.strip():
+                return False
 
     return True
 

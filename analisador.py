@@ -11,7 +11,11 @@ def analisar_texto(texto: str, regras: list) -> list:
 
     for regra in regras:
 
+        if not regra.get("ativo", True):
+            continue
+
         padroes = regra["padroes"]
+
         criterio = regra.get("criterio", "qualquer")
 
         ocorrencias = [

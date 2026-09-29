@@ -9,6 +9,9 @@ def analisar_documentos(documentos: list, regras: list) -> list:
 
     for regra in regras:
 
+        if not regra.get("ativo", True):
+            continue
+
         documentos_encontrados = []
 
         criterio = regra.get("criterio", "qualquer")
