@@ -4,4 +4,5 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-
+processo.json
+processo 1.json
