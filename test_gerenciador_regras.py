@@ -1,8 +1,4 @@
-from gerenciador_regras import (
-    carregar_regras,
-    validar_regras,
-    preparar_regras
-)
+from gerenciador_regras import carregar_regras, validar_regras, preparar_regras
 
 
 def test_carregar_regras_retorna_lista():
@@ -29,6 +25,7 @@ def test_carregar_regras_possui_estrutura_valida():
         assert isinstance(regra["fragmentos"], list)
         assert len(regra["fragmentos"]) > 0
 
+
 def test_validar_regras_rejeita_valor_que_nao_e_lista():
 
     regras = {}
@@ -38,67 +35,42 @@ def test_validar_regras_rejeita_valor_que_nao_e_lista():
 
 def test_validar_regras_rejeita_regra_sem_item():
 
-    regras = [
-        {
-            "fragmentos": ["dados cadastrais"]
-        }
-    ]
+    regras = [{"fragmentos": ["dados cadastrais"]}]
 
     assert validar_regras(regras) is False
 
 
 def test_validar_regras_rejeita_regra_sem_fragmentos():
 
-    regras = [
-        {
-            "item": "Informações Cadastrais"
-        }
-    ]
+    regras = [{"item": "Informações Cadastrais"}]
 
     assert validar_regras(regras) is False
 
+
 def test_validar_regras_rejeita_fragmentos_que_nao_sao_lista():
 
-    regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": "dados cadastrais"
-        }
-    ]
+    regras = [{"item": "Informações Cadastrais", "fragmentos": "dados cadastrais"}]
 
     assert validar_regras(regras) is False
 
 
 def test_validar_regras_rejeita_fragmentos_vazios():
 
-    regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": []
-        }
-    ]
+    regras = [{"item": "Informações Cadastrais", "fragmentos": []}]
 
     assert validar_regras(regras) is False
 
 
 def test_validar_regras_rejeita_regra_que_nao_e_dicionario():
 
-    regras = [
-        "Informações Cadastrais"
-    ]
+    regras = ["Informações Cadastrais"]
 
     assert validar_regras(regras) is False
 
+
 def test_preparar_regras_retorna_lista():
 
-    regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": [
-                "dados cadastrais"
-            ]
-        }
-    ]
+    regras = [{"item": "Informações Cadastrais", "fragmentos": ["dados cadastrais"]}]
 
     resultado = preparar_regras(regras)
 
@@ -107,14 +79,7 @@ def test_preparar_regras_retorna_lista():
 
 def test_preparar_regras_preserva_item():
 
-    regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": [
-                "dados cadastrais"
-            ]
-        }
-    ]
+    regras = [{"item": "Informações Cadastrais", "fragmentos": ["dados cadastrais"]}]
 
     resultado = preparar_regras(regras)
 
@@ -123,19 +88,13 @@ def test_preparar_regras_preserva_item():
 
 def test_preparar_regras_cria_padroes():
 
-    regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": [
-                "Dados Cadastrais"
-            ]
-        }
-    ]
+    regras = [{"item": "Informações Cadastrais", "fragmentos": ["Dados Cadastrais"]}]
 
     resultado = preparar_regras(regras)
 
     assert "padroes" in resultado[0]
     assert len(resultado[0]["padroes"]) == 1
+
 
 def test_preparar_regras_preserva_id():
 
@@ -143,15 +102,14 @@ def test_preparar_regras_preserva_id():
         {
             "id": "AP003",
             "item": "Requerimento de Aposentadoria",
-            "fragmentos": [
-                "requerimento de aposentadoria"
-            ]
+            "fragmentos": ["requerimento de aposentadoria"],
         }
     ]
 
     resultado = preparar_regras(regras)
 
     assert resultado[0]["id"] == "AP003"
+
 
 def test_preparar_regras_preserva_criterio():
 
@@ -164,14 +122,15 @@ def test_preparar_regras_preserva_criterio():
             "fragmentos": [
                 "INFORMAÇÕES COMPLEMENTARES À APOSENTADORIA",
                 "TEMPO AVERBADO",
-                "TEMPO DE SERVIÇO"
-            ]
+                "TEMPO DE SERVIÇO",
+            ],
         }
     ]
 
     resultado = preparar_regras(regras)
 
     assert resultado[0]["criterio"] == "todos"
+
 
 def test_preparar_regras_preserva_ativo():
 
@@ -181,9 +140,7 @@ def test_preparar_regras_preserva_ativo():
             "item": "Informações Cadastrais",
             "ativo": False,
             "criterio": "qualquer",
-            "fragmentos": [
-                "dados cadastrais"
-            ]
+            "fragmentos": ["dados cadastrais"],
         }
     ]
 
@@ -191,18 +148,13 @@ def test_preparar_regras_preserva_ativo():
 
     assert resultado[0]["ativo"] is False
 
+
 def test_validar_regras_rejeita_regra_sem_id():
 
-    regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": [
-                "dados cadastrais"
-            ]
-        }
-    ]
+    regras = [{"item": "Informações Cadastrais", "fragmentos": ["dados cadastrais"]}]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_id_que_nao_e_string():
 
@@ -210,13 +162,12 @@ def test_validar_regras_rejeita_id_que_nao_e_string():
         {
             "id": 123,
             "item": "Informações Cadastrais",
-            "fragmentos": [
-                "dados cadastrais"
-            ]
+            "fragmentos": ["dados cadastrais"],
         }
     ]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_ativo_que_nao_e_booleano():
 
@@ -225,13 +176,12 @@ def test_validar_regras_rejeita_ativo_que_nao_e_booleano():
             "id": "AP001",
             "item": "Informações Cadastrais",
             "ativo": "sim",
-            "fragmentos": [
-                "dados cadastrais"
-            ]
+            "fragmentos": ["dados cadastrais"],
         }
     ]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_criterio_invalido():
 
@@ -240,13 +190,12 @@ def test_validar_regras_rejeita_criterio_invalido():
             "id": "AP001",
             "item": "Informações Cadastrais",
             "criterio": "qualquer-coisa",
-            "fragmentos": [
-                "dados cadastrais"
-            ]
+            "fragmentos": ["dados cadastrais"],
         }
     ]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_item_que_nao_e_string():
 
@@ -256,13 +205,12 @@ def test_validar_regras_rejeita_item_que_nao_e_string():
             "item": 123,
             "ativo": True,
             "criterio": "qualquer",
-            "fragmentos": [
-                "TESTE"
-            ]
+            "fragmentos": ["TESTE"],
         }
     ]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_fragmento_que_nao_e_string():
 
@@ -272,14 +220,12 @@ def test_validar_regras_rejeita_fragmento_que_nao_e_string():
             "item": "Regra de teste",
             "ativo": True,
             "criterio": "qualquer",
-            "fragmentos": [
-                "TESTE",
-                123
-            ]
+            "fragmentos": ["TESTE", 123],
         }
     ]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_fragmento_vazio():
 
@@ -289,13 +235,12 @@ def test_validar_regras_rejeita_fragmento_vazio():
             "item": "Regra de teste",
             "ativo": True,
             "criterio": "qualquer",
-            "fragmentos": [
-                ""
-            ]
+            "fragmentos": [""],
         }
     ]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_id_vazio():
 
@@ -305,13 +250,12 @@ def test_validar_regras_rejeita_id_vazio():
             "item": "Regra de teste",
             "ativo": True,
             "criterio": "qualquer",
-            "fragmentos": [
-                "TESTE"
-            ]
+            "fragmentos": ["TESTE"],
         }
     ]
 
     assert validar_regras(regras) is False
+
 
 def test_validar_regras_rejeita_item_vazio():
 
@@ -321,9 +265,7 @@ def test_validar_regras_rejeita_item_vazio():
             "item": "",
             "ativo": True,
             "criterio": "qualquer",
-            "fragmentos": [
-                "TESTE"
-            ]
+            "fragmentos": ["TESTE"],
         }
     ]
 

@@ -7,13 +7,13 @@ from gerenciador_regras import carregar_regras, preparar_regras
 app = FastAPI(
     title="Text Analyzer API",
     description="API para identificação de itens e fragmentos em textos.",
-    version="1.0.0"
+    version="1.0.0",
 )
+
 
 class TextoEntrada(BaseModel):
     texto: str | None = Field(
-        default=None,
-        description="Texto que será analisado pela API."
+        default=None, description="Texto que será analisado pela API."
     )
 
 
@@ -40,8 +40,10 @@ class ProcessoRequest(BaseModel):
     processo: Processo
     documentos: list[Documento]
 
+
 regras = carregar_regras()
 regras = preparar_regras(regras)
+
 
 @app.post("/analisar")
 async def endpoint_analisar_texto(dados: TextoEntrada):
@@ -51,7 +53,7 @@ async def endpoint_analisar_texto(dados: TextoEntrada):
             "resultado": False,
             "motivo": "O campo 'texto' é obrigatório.",
             "quantidade_itens": 0,
-            "itens_encontrados": []
+            "itens_encontrados": [],
         }
 
     if not dados.texto.strip():
@@ -59,7 +61,7 @@ async def endpoint_analisar_texto(dados: TextoEntrada):
             "resultado": False,
             "motivo": "O texto informado está vazio.",
             "quantidade_itens": 0,
-            "itens_encontrados": []
+            "itens_encontrados": [],
         }
 
     itens_encontrados = analisar_texto(dados.texto, regras)
@@ -69,43 +71,30 @@ async def endpoint_analisar_texto(dados: TextoEntrada):
             "resultado": True,
             "motivo": "Itens identificados no texto.",
             "quantidade_itens": len(itens_encontrados),
-            "itens_encontrados": itens_encontrados
+            "itens_encontrados": itens_encontrados,
         }
 
     return {
         "resultado": False,
         "motivo": "Nenhum item previsto nas regras foi identificado no texto.",
         "quantidade_itens": 0,
-        "itens_encontrados": []
+        "itens_encontrados": [],
     }
+
 
 @app.post("/validar-processo")
 async def validar_processo(dados: ProcessoRequest):
 
-    itens_encontrados = analisar_documentos(
-        dados.documentos,
-        regras
-    )
-    ids_encontrados = {
-        item["id"]
-        for item in itens_encontrados
-    }
-
+    itens_encontrados = analisar_documentos(dados.documentos, regras)
+    ids_encontrados = {item["id"] for item in itens_encontrados}
 
     itens_nao_encontrados = [
         regra["item"]
         for regra in regras
-        if regra.get("ativo", True)
-           and regra["id"] not in ids_encontrados
+        if regra.get("ativo", True) and regra["id"] not in ids_encontrados
     ]
 
     if len(itens_nao_encontrados) == 0:
-        return {
-            "resultado": True,
-            "itens_nao_encontrados": []
-        }
+        return {"resultado": True, "itens_nao_encontrados": []}
 
-    return {
-        "resultado": False,
-        "itens_nao_encontrados": itens_nao_encontrados
-    }
+    return {"resultado": False, "itens_nao_encontrados": itens_nao_encontrados}

@@ -30,10 +30,7 @@
     "item": "Declaração de Acúmulo de Cargos/Proventos",
     "ativo": true,
     "criterio": "todos",
-    "fragmentos": [
-      "DECLARAÇÃO DE ACÚMULO DE CARGOS",
-      "PROVENTOS"
-    ]
+    "fragmentos": ["DECLARAÇÃO DE ACÚMULO DE CARGOS", "PROVENTOS"]
   },
   {
     "id": "AP004",
