@@ -29,13 +29,7 @@ def test_regras_validas():
 
 def test_regra_sem_item():
 
-    regras_invalidas = [
-        {
-            "fragmentos": [
-                "informações cadastrais"
-            ]
-        }
-    ]
+    regras_invalidas = [{"fragmentos": ["informações cadastrais"]}]
 
     resultado = validar_regras(regras_invalidas)
 
@@ -44,11 +38,7 @@ def test_regra_sem_item():
 
 def test_regra_sem_fragmentos():
 
-    regras_invalidas = [
-        {
-            "item": "Informações Cadastrais"
-        }
-    ]
+    regras_invalidas = [{"item": "Informações Cadastrais"}]
 
     resultado = validar_regras(regras_invalidas)
 
@@ -57,12 +47,7 @@ def test_regra_sem_fragmentos():
 
 def test_fragmentos_vazios():
 
-    regras_invalidas = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": []
-        }
-    ]
+    regras_invalidas = [{"item": "Informações Cadastrais", "fragmentos": []}]
 
     resultado = validar_regras(regras_invalidas)
 
@@ -74,10 +59,7 @@ def test_analisar_texto_com_item():
     regras = [
         {
             "item": "Informações Cadastrais",
-            "fragmentos": [
-                "dados cadastrais",
-                "informações cadastrais"
-            ]
+            "fragmentos": ["dados cadastrais", "informações cadastrais"],
         }
     ]
 
@@ -94,10 +76,7 @@ def test_analisar_texto_sem_item():
     regras = [
         {
             "item": "Informações Cadastrais",
-            "fragmentos": [
-                "dados cadastrais",
-                "informações cadastrais"
-            ]
+            "fragmentos": ["dados cadastrais", "informações cadastrais"],
         }
     ]
 
@@ -115,8 +94,8 @@ def test_analisar_texto_encontra_um_dos_fragmentos():
             "item": "Requerimento de Aposentadoria",
             "fragmentos": [
                 "requerimento de aposentadoria",
-                "requerimento para aposentadoria"
-            ]
+                "requerimento para aposentadoria",
+            ],
         }
     ]
 
@@ -138,15 +117,12 @@ def test_analisar_matriz_apuracao_tempo():
                 "Art. 144 do ADCT, EC 104_2020 CC Art. 6",
                 "Art. 146 do ADCT, EC 104 2020",
                 "Art. 147 do ADCT, EC 104_2020",
-                "Art. 149 do ADCT, EC 104"
-            ]
+                "Art. 149 do ADCT, EC 104",
+            ],
         }
     ]
 
-    texto = (
-        "Conforme o Art. 147 do ADCT, EC 104_2020, "
-        "deve ser realizada a apuração."
-    )
+    texto = "Conforme o Art. 147 do ADCT, EC 104_2020, deve ser realizada a apuração."
 
     resultado = analisar_com_regras(texto, regras)
 
@@ -159,11 +135,7 @@ def test_analisar_dados_funcionais():
     regras = [
         {
             "item": "Dados Funcionais",
-            "fragmentos": [
-                "FÉRIAS PRÊMIO",
-                "QUINQUÊNIOS",
-                "DADOS FINANCEIROS ATUAIS"
-            ]
+            "fragmentos": ["FÉRIAS PRÊMIO", "QUINQUÊNIOS", "DADOS FINANCEIROS ATUAIS"],
         }
     ]
 
@@ -180,11 +152,7 @@ def test_dados_funcionais_nao_identificado_pelo_nome_do_item():
     regras = [
         {
             "item": "Dados Funcionais",
-            "fragmentos": [
-                "FÉRIAS PRÊMIO",
-                "QUINQUÊNIOS",
-                "DADOS FINANCEIROS ATUAIS"
-            ]
+            "fragmentos": ["FÉRIAS PRÊMIO", "QUINQUÊNIOS", "DADOS FINANCEIROS ATUAIS"],
         }
     ]
 
@@ -200,11 +168,7 @@ def test_dados_funcionais_identificado_por_ferias_premio():
     regras = [
         {
             "item": "Dados Funcionais",
-            "fragmentos": [
-                "FÉRIAS PRÊMIO",
-                "QUINQUÊNIOS",
-                "DADOS FINANCEIROS ATUAIS"
-            ]
+            "fragmentos": ["FÉRIAS PRÊMIO", "QUINQUÊNIOS", "DADOS FINANCEIROS ATUAIS"],
         }
     ]
 
@@ -221,11 +185,7 @@ def test_dados_funcionais_identificado_por_quinquenios():
     regras = [
         {
             "item": "Dados Funcionais",
-            "fragmentos": [
-                "FÉRIAS PRÊMIO",
-                "QUINQUÊNIOS",
-                "DADOS FINANCEIROS ATUAIS"
-            ]
+            "fragmentos": ["FÉRIAS PRÊMIO", "QUINQUÊNIOS", "DADOS FINANCEIROS ATUAIS"],
         }
     ]
 
@@ -242,11 +202,7 @@ def test_dados_funcionais_identificado_por_dados_financeiros():
     regras = [
         {
             "item": "Dados Funcionais",
-            "fragmentos": [
-                "FÉRIAS PRÊMIO",
-                "QUINQUÊNIOS",
-                "DADOS FINANCEIROS ATUAIS"
-            ]
+            "fragmentos": ["FÉRIAS PRÊMIO", "QUINQUÊNIOS", "DADOS FINANCEIROS ATUAIS"],
         }
     ]
 
@@ -265,8 +221,8 @@ def test_item_aparece_uma_unica_vez_mesmo_com_multiplas_ocorrencias():
             "item": "Requerimento de Aposentadoria",
             "fragmentos": [
                 "requerimento de aposentadoria",
-                "requerimento para aposentadoria"
-            ]
+                "requerimento para aposentadoria",
+            ],
         }
     ]
 
@@ -287,9 +243,7 @@ def test_analise_ignora_maiusculas_e_minusculas():
     regras = [
         {
             "item": "Requerimento de Aposentadoria",
-            "fragmentos": [
-                "requerimento de aposentadoria"
-            ]
+            "fragmentos": ["requerimento de aposentadoria"],
         }
     ]
 
@@ -304,12 +258,7 @@ def test_analise_ignora_maiusculas_e_minusculas():
 def test_analise_ignora_acentos():
 
     regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": [
-                "informações cadastrais"
-            ]
-        }
+        {"item": "Informações Cadastrais", "fragmentos": ["informações cadastrais"]}
     ]
 
     texto = "informacoes cadastrais"
@@ -323,12 +272,7 @@ def test_analise_ignora_acentos():
 def test_analise_ignora_maiusculas_e_acentos_ao_mesmo_tempo():
 
     regras = [
-        {
-            "item": "Informações Cadastrais",
-            "fragmentos": [
-                "informações cadastrais"
-            ]
-        }
+        {"item": "Informações Cadastrais", "fragmentos": ["informações cadastrais"]}
     ]
 
     texto = "INFORMACOES CADASTRAIS"
@@ -344,24 +288,18 @@ def test_analisar_documento_com_varios_itens():
     regras = [
         {
             "item": "Certidão de Tempo Averbado",
-            "fragmentos": [
-                "Tempo Averbado",
-                "Certidão de Tempo Averbado"
-            ]
+            "fragmentos": ["Tempo Averbado", "Certidão de Tempo Averbado"],
         },
         {
             "item": "Informações Cadastrais",
-            "fragmentos": [
-                "dados cadastrais",
-                "informações cadastrais"
-            ]
+            "fragmentos": ["dados cadastrais", "informações cadastrais"],
         },
         {
             "item": "Requerimento de Aposentadoria",
             "fragmentos": [
                 "requerimento de aposentadoria",
-                "requerimento para aposentadoria"
-            ]
+                "requerimento para aposentadoria",
+            ],
         },
         {
             "item": "Matriz de Apuração de Tempo",
@@ -370,17 +308,13 @@ def test_analisar_documento_com_varios_itens():
                 "Art. 144 do ADCT, EC 104_2020 CC Art. 6",
                 "Art. 146 do ADCT, EC 104 2020",
                 "Art. 147 do ADCT, EC 104_2020",
-                "Art. 149 do ADCT, EC 104"
-            ]
+                "Art. 149 do ADCT, EC 104",
+            ],
         },
         {
             "item": "Dados Funcionais",
-            "fragmentos": [
-                "FÉRIAS PRÊMIO",
-                "QUINQUÊNIOS",
-                "DADOS FINANCEIROS ATUAIS"
-            ]
-        }
+            "fragmentos": ["FÉRIAS PRÊMIO", "QUINQUÊNIOS", "DADOS FINANCEIROS ATUAIS"],
+        },
     ]
 
     texto = """
@@ -411,6 +345,7 @@ def test_analisar_documento_com_varios_itens():
 
     assert "Dados Funcionais" not in itens
 
+
 def test_analisar_texto_ignora_regra_inativa():
 
     regras = [
@@ -419,17 +354,12 @@ def test_analisar_texto_ignora_regra_inativa():
             "item": "Regra Inativa",
             "ativo": False,
             "criterio": "qualquer",
-            "fragmentos": [
-                "DADOS CADASTRAIS"
-            ]
+            "fragmentos": ["DADOS CADASTRAIS"],
         }
     ]
 
     regras = preparar_regras(regras)
 
-    resultado = analisar_texto(
-        "O documento contém DADOS CADASTRAIS.",
-        regras
-    )
+    resultado = analisar_texto("O documento contém DADOS CADASTRAIS.", regras)
 
     assert resultado == []

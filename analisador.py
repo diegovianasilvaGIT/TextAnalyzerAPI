@@ -10,7 +10,6 @@ def analisar_texto(texto: str, regras: list) -> list:
     itens_encontrados = []
 
     for regra in regras:
-
         if not regra.get("ativo", True):
             continue
 
@@ -18,10 +17,7 @@ def analisar_texto(texto: str, regras: list) -> list:
 
         criterio = regra.get("criterio", "qualquer")
 
-        ocorrencias = [
-            re.search(padrao, texto_normalizado)
-            for padrao in padroes
-        ]
+        ocorrencias = [re.search(padrao, texto_normalizado) for padrao in padroes]
 
         if criterio == "todos":
             encontrado = all(ocorrencias)
@@ -29,9 +25,6 @@ def analisar_texto(texto: str, regras: list) -> list:
             encontrado = any(ocorrencias)
 
         if encontrado:
-            itens_encontrados.append({
-                "id": regra.get("id"),
-                "item": regra["item"]
-            })
+            itens_encontrados.append({"id": regra.get("id"), "item": regra["item"]})
 
     return itens_encontrados
